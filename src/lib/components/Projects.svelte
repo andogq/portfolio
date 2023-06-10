@@ -2,33 +2,23 @@
     import { Code, GitFork, Play, Star } from "lucide-svelte";
     import Tags from "$lib/components/Tags.svelte";
     import Outlined from "$lib/components/Outlined.svelte";
+    import type { Project } from "$lib/types/project";
 
-    export let projects: {
-        title: string,
-        description: string,
-        languages: string[],
-        repo: null | {
-            forks: number,
-            stars: number,
-            link: string,
-        },
-        website: string | null
-    }[];
+    export let projects: Project[];
 
     function project_links(project: typeof projects[number]) {
         return [
             {
                 Icon: Code,
-                link: project.repo?.link || null,
-                text: "View source"
+                link: project.repo?.url || null,
+                text: "View source",
             },
             {
                 Icon: Play,
-                link: project.website || null,
-                text: "Visit"
+                link: project.url || null,
+                text: "Visit",
             },
-        ]
-            .filter(({ link }) => link !== null);
+        ].filter(({ link }) => link !== null);
     }
 </script>
 
@@ -38,9 +28,9 @@
             <Outlined>
                 <div class="project">
                     <div class="header">
-                        <h4>{project.title}</h4>
+                        <h4>{project.name}</h4>
 
-                        {#if project.repo !== null}
+                        {#if project.repo}
                             <div class="repo_details">
                                 <Star />
                                 <p>{project.repo.stars}</p>
@@ -50,13 +40,17 @@
                         {/if}
                     </div>
 
-                    <Tags tags={project.languages} />
+                    {#if project.languages}
+                        <Tags tags={project.languages} />
+                    {/if}
 
-                    <p>{project.description}</p>
+                    {#if project.description}
+                        <p>{project.description}</p>
+                    {/if}
 
                     <div class="buttons">
                         {#each project_links(project) as { Icon, link, text }}
-                            <a href={link} >
+                            <a href={link}>
                                 <div class="button">
                                     <Icon />
 
@@ -96,7 +90,7 @@
 
     .project {
         padding: 30px;
-        
+
         display: flex;
         flex-direction: column;
         gap: 15px;

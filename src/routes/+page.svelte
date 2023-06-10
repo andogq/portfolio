@@ -2,82 +2,18 @@
     import Header from "$lib/components/Header.svelte";
     import Posts from "$lib/components/Posts.svelte";
     import Projects from "$lib/components/Projects.svelte";
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
 
     const posts = [
         { title: "Hello This is a Test", date: new Date("2022-07-26T19:15:00Z"), tags: ["bug", "invalid"] },
         { title: "Writing a Generic Profile API in Rust", date: new Date("2023-05-31T03:14:00Z"), tags: ["web", "api", "rust"] },
         { title: "How I Built a Million Dollar Startup", date: new Date("2023-08-02T18:28:00Z"), tags: ["money", "stevent"] },
     ];
-
-    const projects = [
-        {
-            title: "timetable",
-            description: "A webapp to make choosing a timetable simple!",
-            languages: [
-                "HTML",
-                "Svelte",
-                "JavaScript",
-                "CSS"
-            ],
-            repo: {
-                forks: 3,
-                stars: 6,
-                link: "https://github.com/andogq/timetable"
-            },
-            website: "https://timetable.ando.gq/"
-        },
-        {
-            title: "timetable",
-            description: "A webapp to make choosing a timetable simple!",
-            languages: [
-                "HTML",
-                "Svelte",
-                "JavaScript",
-                "CSS"
-            ],
-            repo: {
-                forks: 3,
-                stars: 6,
-                link: "https://github.com/andogq/timetable"
-            },
-            website: "https://timetable.ando.gq/"
-        },
-        {
-            title: "timetable",
-            description: "A webapp to make choosing a timetable simple!",
-            languages: [
-                "HTML",
-                "Svelte",
-                "JavaScript",
-                "CSS"
-            ],
-            repo: {
-                forks: 3,
-                stars: 6,
-                link: "https://github.com/andogq/timetable"
-            },
-            website: "https://timetable.ando.gq/"
-        },
-        {
-            title: "timetable",
-            description: "A webapp to make choosing a timetable simple!",
-            languages: [
-                "HTML",
-                "Svelte",
-                "JavaScript",
-                "CSS"
-            ],
-            repo: {
-                forks: 3,
-                stars: 6,
-                link: "https://github.com/andogq/timetable"
-            },
-            website: "https://timetable.ando.gq/"
-        },
-    ];
 </script>
 
-<Header />
+<Header profile={data.profile} />
 
 <div id="content">
     <h2 class="underline">About Me</h2>
@@ -101,7 +37,7 @@
     <h2 class="underline">What I'm Working On</h2>
 
     <div>
-        <Projects {projects} />
+        <Projects projects={data.projects} />
     </div>
 </div>
 
