@@ -19,7 +19,7 @@
     {#each icons as { icon_name, link }}
         {@const Icon = icon_map[icon_name]}
 
-        <a href={link}>
+        <a href={link} aria-label={icon_name}>
             <div class="icon">
                 <Icon />
             </div>
