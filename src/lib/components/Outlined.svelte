@@ -1,8 +1,13 @@
 <script lang="ts">
     export let border_radius: string = "var(--border-radius)";
+    export let height: string | null = null;
 </script>
 
-<div id="container" style:--outlined-border-radius={border_radius}>
+<div
+    id="container"
+    style:--outlined-border-radius={border_radius}
+    style:height={height ?? ""}
+>
     <div id="inner">
         <slot />
     </div>

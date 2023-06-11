@@ -2,7 +2,7 @@ import type { Profile } from "$lib/types/profile";
 import type { Project } from "$lib/types/project";
 import type { PageLoad } from "./$types";
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ fetch }) => {
     let [profile, projects] = await Promise.all([
         "user/github/profile/andogq",
         "projects/github/repo_topics/andogq"

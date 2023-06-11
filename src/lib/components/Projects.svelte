@@ -25,7 +25,7 @@
 <div id="container">
     {#each projects as project}
         <div>
-            <Outlined>
+            <Outlined height="100%">
                 <div class="project">
                     <div class="header">
                         <h4>{project.name}</h4>
@@ -47,6 +47,8 @@
                     {#if project.description}
                         <p>{project.description}</p>
                     {/if}
+
+                    <div class="spacer" />
 
                     <div class="buttons">
                         {#each project_links(project) as { Icon, link, text }}
@@ -70,6 +72,7 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        align-items: stretch;
         justify-content: center;
         gap: 25px;
     }
@@ -89,6 +92,8 @@
     }
 
     .project {
+        height: 100%;
+
         padding: 30px;
 
         display: flex;
@@ -110,6 +115,10 @@
 
     .repo_details > p:not(:last-child) {
         margin-right: 15px;
+    }
+
+    .spacer {
+        flex-grow: 1;
     }
 
     .buttons {
