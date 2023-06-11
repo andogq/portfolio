@@ -1,22 +1,25 @@
 <script lang="ts">
     import Tags from "$lib/components/Tags.svelte";
+    import type { Post } from "$lib/types/post";
 
-    export let posts: { title: string, date: Date, tags: string[] }[];
+    export let posts: Post[];
 </script>
 
 <div id="container">
-    {#each posts as { title, date, tags }, i}
-        <div class="post">
-            <h3 class="post_number">{i.toLocaleString("default", { minimumIntegerDigits: 2 })}</h3>
-            <p class="title">{title}</p>
+    {#each posts as { title, created_at, tags, original_link }, i}
+        <a href={original_link} aria-label="Original post">
+            <div class="post">
+                <h3 class="post_number">{i.toLocaleString("default", { minimumIntegerDigits: 2 })}</h3>
+                <p class="title">{title}</p>
 
-            <div class="details">
-                <p class="date">{date.toLocaleString()}</p>
-                <div class="tags">
-                    <Tags {tags}/>
+                <div class="details">
+                    <p class="date">{created_at.toLocaleString()}</p>
+                    <div class="tags">
+                        <Tags {tags}/>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     {/each}
 </div>
 

@@ -57,6 +57,11 @@ h4 {
     font-size: 1.5rem;
 }
 
+a, a:visited, a:hover {
+    text-decoration: none;
+    color: var(--grey);
+}
+
 @media (max-width: 500px) {
     h1 {
         font-size: 3rem;

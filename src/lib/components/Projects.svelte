@@ -134,6 +134,7 @@
 
         color: var(--grey);
 
+        height: 100%;
         width: fit-content;
         padding: 5px 15px;
 
