@@ -29,7 +29,7 @@
 
 <style>
     #container {
-        --padding: 5vh;
+        --padding: 5vw;
 
         margin: var(--padding);
         max-height: calc(100vh - (2 * var(--padding)));
