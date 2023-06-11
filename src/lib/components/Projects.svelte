@@ -79,6 +79,7 @@
 
     #container > * {
         width: fit-content;
+        max-width: 400px;
         flex-grow: 1;
 
         transition: transform var(--transition);
