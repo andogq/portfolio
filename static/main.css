@@ -57,6 +57,20 @@ h4 {
     font-size: 1.5rem;
 }
 
+@media (max-width: 500px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+}
+
 .underline {
     text-decoration: underline;
     text-decoration-color: var(--primary);

@@ -49,6 +49,12 @@
         margin: 5vh auto;
     }
 
+    @media (max-width: 500px) {
+        #content {
+            padding: 0 10vw;
+        }
+    }
+
     #content > *:not(:last-child) {
         padding-bottom: 2rem;
     }

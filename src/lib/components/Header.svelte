@@ -45,4 +45,8 @@
         align-items: center;
         gap: 2rem;
     }
+
+    #name, #bio {
+        text-align: center;
+    }
 </style>

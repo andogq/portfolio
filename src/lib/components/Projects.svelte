@@ -78,7 +78,6 @@
     }
 
     #container > * {
-        min-width: 400px;
         width: fit-content;
         flex-grow: 1;
 

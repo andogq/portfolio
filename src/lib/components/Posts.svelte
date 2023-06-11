@@ -9,9 +9,12 @@
         <div class="post">
             <h3 class="post_number">{i.toLocaleString("default", { minimumIntegerDigits: 2 })}</h3>
             <p class="title">{title}</p>
-            <p class="date">{date.toLocaleString()}</p>
-            <div class="tags">
-                <Tags {tags}/>
+
+            <div class="details">
+                <p class="date">{date.toLocaleString()}</p>
+                <div class="tags">
+                    <Tags {tags}/>
+                </div>
             </div>
         </div>
     {/each}
@@ -31,8 +34,8 @@
         padding: 20px;
 
         display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto 1fr;
         column-gap: 1rem;
 
         align-items: center;
@@ -46,20 +49,24 @@
     }
 
     .title {
-        grid-area: 1 / 2 / 2 / 4;
+        grid-area: 1 / 2 / 2 / 3;
 
         font-size: 1rem;
         font-weight: bold;
     }
 
-    .date {
+    .details {
         grid-area: 2 / 2 / 3 / 3;
 
-        font-size: 1rem;
-        color: var(--grey);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem;
     }
 
-    .tags {
-        grid-area: 2 / 3 / 3 / 4;
+    .date {
+        font-size: 1rem;
+        color: var(--grey);
     }
 </style>
