@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tom Anderson</title>
+
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#1a1c27" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Tom Anderson Portfolio" />
+
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap"
+        onload="this.onload=null;this.rel='stylesheet';" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" />
+    </noscript>
+
+    <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
+
+    <script>
+        // put shit on the window
+        const USERNAME = "andogq";
+
+        const API_PROFILE = "user/github/profile";
+        const API_PROJECTS = "projects/github/repo_topics";
+        const API_BLURB = "blurb/github/readme";
+        const API_POSTS = "posts/github/issues";
+
+        function get_icon_html(icon) {
+            return document.getElementsByClassName(`lucide-${icon}`)[0].outerHTML;
+        }
+
+        function get_icons(profile) {
+            return [
+                {name: "github", link: profile.links["github"]},
+                {name: "twitter", link: profile.links["twitter"]},
+                {name: "mail", link: `mailto:${profile.email}`},
+            ].map(({name, link}) => {
+                return {el: get_icon_html(name), link};
+            });
+        }
+
+        function call_api(path) {
+            return fetch(`https://api.ando.gq/api/${path}/${USERNAME}`)
+                .then((response) => response.json());
+        }
+
+        function project_links(project) {
+            return [
+                {
+                    icon: "code",
+                    link: project.repo?.url || null,
+                    text: "View source",
+                },
+                {
+                    icon: "play",
+                    link: project.url || null,
+                    text: "Visit",
+                },
+            ].filter(({link}) => link !== null);
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary: #fea31d;
+            --light: #edf4ff;
+            --grey: #a8b2c6;
+            --background: #262c3a;
+            --transition: 0.25s ease-in-out;
+            --border-radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100vh;
+            width: 100vw;
+
+            overflow-x: hidden;
+            overflow-y: scroll;
+
+            background: rgb(26, 28, 39);
+            background: linear-gradient(0deg, rgba(15, 17, 27, 1) 0%, rgba(26, 28, 39, 1) 100%);
+
+            color: var(--grey);
+            font-family: "Cabin", sans-serif;
+        }
+
+        html::before {
+            content: "";
+            position: fixed;
+            z-index: -1;
+
+            height: 100vh;
+            width: 100vw;
+
+            background: rgb(26, 28, 39);
+            background: linear-gradient(0deg, rgba(15, 17, 27, 1) 0%, rgba(26, 28, 39, 1) 100%);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--light);
+        }
+
+        h1 {
+            font-size: 4rem;
+        }
+
+        h2 {
+            font-size: 3rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        a,
+        a:visited,
+        a:hover {
+            text-decoration: none;
+            color: var(--grey);
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h4 {
+                font-size: 1rem;
+            }
+        }
+
+        #header {
+            --padding: 5vw;
+
+            margin: var(--padding);
+            max-height: calc(100vh - (2 * var(--padding)));
+            width: calc(100vw - (2 * var(--padding)));
+
+            text-align: center;
+
+            & .profile-picture {
+                display: block;
+                padding: 0;
+
+                width: 200px;
+                aspect-ratio: 1;
+
+                box-shadow: 0px 1px 0px 1px var(--primary), 0px 2px 10px rgba(254, 163, 29, 0.3), 0px 0px 50px rgba(237, 244, 255, 0.2);
+
+                border-radius: 50%;
+            }
+
+            &>div {
+                padding: var(--padding);
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            & .icons-list {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+
+                &>* {
+                    color: var(--light);
+                    transition: color var(--transition);
+                    cursor: pointer;
+
+                    &:hover {
+                        color: var(--primary);
+                    }
+                }
+
+            }
+        }
+
+        main {
+            max-width: 1000px;
+
+            padding: 0 5rem;
+            margin: 5vh auto;
+
+            @media (max-width: 500px) {
+                & {
+                    padding: 0 10vw;
+                }
+            }
+
+            &>.projects {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: stretch;
+                justify-content: center;
+                gap: 25px;
+
+                &>.project {
+                    width: fit-content;
+                    max-width: 400px;
+                    flex-grow: 1;
+
+                    transition: transform var(--transition);
+
+                    position: relative;
+
+                    &:hover {
+                        transform: scale(1.025);
+                    }
+
+                    &>div {
+                        height: 100%;
+
+                        padding: 30px;
+
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+
+                        &>.header {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+
+                            &>.repo_details {
+                                display: flex;
+                                align-items: center;
+                                gap: 5px;
+
+                                &>p:not(:last-child) {
+                                    margin-right: 15px;
+                                }
+                            }
+                        }
+
+                        &>.spacer {
+                            flex-grow: 1;
+                        }
+
+                        .buttons {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 20px;
+
+                            & .button {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                gap: 10px;
+
+                                color: var(--grey);
+
+                                height: 100%;
+                                width: fit-content;
+                                padding: 5px 15px;
+
+                                font-weight: bold;
+
+                                border: 1px solid var(--grey);
+                                border-radius: 10px;
+
+                                transition: color var(--transition), border-color var(--transition);
+
+                                &:hover {
+                                    color: var(--light);
+                                    border-color: var(--grey);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            & .posts {
+                display: flex;
+                flex-direction: column-reverse;
+                gap: 20px;
+
+                & .post {
+                    background: var(--background);
+                    border-radius: var(--border-radius);
+                    overflow: hidden;
+                    padding: 20px;
+
+                    display: grid;
+                    grid-template-rows: auto auto;
+                    grid-template-columns: auto 1fr;
+                    column-gap: 1rem;
+
+                    align-items: center;
+                }
+
+                .post_number {
+                    grid-area: 1 / 1 / 3 / 2;
+
+                    font-size: 2rem;
+                    font-weight: bold;
+                }
+
+                .title {
+                    grid-area: 1 / 2 / 2 / 3;
+
+                    font-size: 1rem;
+                    font-weight: bold;
+                }
+
+                .details {
+                    grid-area: 2 / 2 / 3 / 3;
+
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    gap: 0.5rem;
+                }
+
+                .date {
+                    font-size: 1rem;
+                    color: var(--grey);
+                }
+            }
+        }
+
+        /* Utility Classes */
+        .spaced-content>*:not(:last-child) {
+            padding-bottom: 2rem;
+        }
+
+        .outlined {
+            padding: 1px;
+            background: linear-gradient(0deg, rgba(42, 48, 65, 1) 0%, rgba(113, 130, 160, 1) 100%);
+
+            &>div {
+                background: linear-gradient(0deg, rgba(44, 50, 66, 1) 0%, rgba(41, 47, 62, 1) 100%);
+            }
+
+            &,
+            &>div {
+                border-radius: 30px;
+            }
+        }
+
+        .underline {
+            text-decoration: underline;
+            text-decoration-color: var(--primary);
+            text-decoration-thickness: 5px;
+        }
+
+        .tags {
+            display: flex;
+            flex-direction: row;
+
+            gap: 10px;
+
+            &>div {
+                background: var(--primary);
+                color: var(--background);
+
+                border-radius: 20px;
+                padding: 0 10px;
+
+                font-size: 0.9rem;
+                height: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <template x-data="{ profile: null }" x-init="profile = await call_api(API_PROFILE)" x-if="profile !== null">
+        <section id="header" class="outlined">
+            <div>
+                <img class="profile-picture" x-bind:src="profile.avatar" alt="cool guy" />
+
+                <h1 id="name" x-text="profile.name"></h1>
+
+                <p id="bio" x-text="profile.bio"></p>
+
+                <div class="icons-list" x-data="{ icons: get_icons(profile) }">
+                    <template x-for="icon in icons">
+                        <a x-bind:href="icon.link" x-html="icon.el" target="_blank" rel="noreferrer nofollow"></a>
+                    </template>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <main class="spaced-content">
+        <h2 class="underline">About Me</h2>
+
+        <template x-data="{ blurb: null }" x-init="blurb = await call_api(API_BLURB)" x-if="blurb !== null">
+            <div x-html="blurb.blurb" />
+        </template>
+
+        <h2 class="underline">What I'm Working On</h2>
+
+        <template x-data="{ projects: null }" x-init="projects = await call_api(API_PROJECTS)" x-if="projects !== null">
+            <div class="projects">
+                <template x-for="project in projects">
+                    <div class="project outlined">
+                        <div>
+                            <div class="header">
+                                <h4 x-text="project.name"></h4>
+
+                                <template x-if="project.repo">
+                                    <div class="repo_details">
+                                        <div x-html="get_icon_html('star')" style="display: contents"></div>
+                                        <p x-text="project.repo.stars"></p>
+
+                                        <div x-html="get_icon_html('git-fork')" style="display: contents"></div>
+                                        <p x-text="project.repo.forks"></p>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <template x-if="project.languages">
+                                <div class="tags">
+                                    <template x-for="language in project.languages">
+                                        <div>
+                                            <p x-text="language"></p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <template x-if="project.description">
+                                <p x-text="project.description" />
+                            </template>
+
+                            <div class="spacer"></div>
+
+                            <div class="buttons">
+                                <template x-for="{ icon, link, text } in project_links(project)">
+                                    <a x-bind:href="link">
+                                        <div class="button">
+                                            <div x-html="get_icon_html(icon)" style="display: contents;"></div>
+
+                                            <p x-text="text"></p>
+                                        </div>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template x-data="{ posts: null }" x-init="posts = await call_api(API_POSTS)"
+            x-if="posts !== null && posts.length > 0">
+            <div class="spaced-content" style="display: contents">
+                <h2 class="underline">What I'm Writing</h2>
+
+                <div class="posts">
+                    <template x-for="(post, i) in posts">
+                        <a x-bind:href="post.original_link" aria-label="Original post">
+                            <div class="post">
+                                <h3 class="post_number"
+                                    x-text="i.toLocaleString('default', { minimumIntegerDigits: 2 })">
+                                </h3>
+                                <p class="title" x-text="post.title"></p>
+
+                                <div class="details">
+                                    <p class="date" x-text="post.created_at.toLocaleString()"></p>
+                                    <div class="tags">
+                                        <template x-for="tag in post.tags">
+                                            <div>
+                                                <p x-text="tag"></p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </main>
+
+    <div style="display: none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-github">
+            <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+            <path d="M9 18c-4.51 2-5-2-7-2" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-twitter">
+            <path
+                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-mail">
+            <rect width="20" height="16" x="2" y="4" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-star">
+            <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-git-fork">
+            <circle cx="12" cy="18" r="3" />
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="18" cy="6" r="3" />
+            <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9" />
+            <path d="M12 12v3" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-code">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-play">
+            <polygon points="5 3 19 12 5 21 5 3" />
+        </svg>
+    </div>
+</body>
+
+</html>
